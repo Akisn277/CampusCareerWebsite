@@ -2,95 +2,86 @@
 @tailwind components;
 @tailwind utilities;
 
-/* Definition of the design system. All colors, gradients, fonts, etc should be defined here. 
-All colors MUST be HSL.
-*/
+/* SRM DCC Design System - Google-inspired Enterprise Clarity */
+/* All colors in HSL format */
 
 @layer base {
   :root {
+    /* Core Palette - Pure White + Subtle Greys */
     --background: 0 0% 100%;
-    --foreground: 222.2 84% 4.9%;
+    --foreground: 213 14% 20%;
 
+    /* Cards and Surfaces */
     --card: 0 0% 100%;
-    --card-foreground: 222.2 84% 4.9%;
+    --card-foreground: 213 14% 20%;
 
     --popover: 0 0% 100%;
-    --popover-foreground: 222.2 84% 4.9%;
+    --popover-foreground: 213 14% 20%;
 
-    --primary: 222.2 47.4% 11.2%;
-    --primary-foreground: 210 40% 98%;
+    /* Google Blue Accent - Restrained, Professional */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 100%;
 
-    --secondary: 210 40% 96.1%;
-    --secondary-foreground: 222.2 47.4% 11.2%;
+    /* Secondary - Subtle Grey Surface */
+    --secondary: 220 14% 96%;
+    --secondary-foreground: 213 14% 20%;
 
-    --muted: 210 40% 96.1%;
-    --muted-foreground: 215.4 16.3% 46.9%;
+    /* Muted - For Disabled/Subtle Elements */
+    --muted: 220 13% 91%;
+    --muted-foreground: 215 14% 46%;
 
-    --accent: 210 40% 96.1%;
-    --accent-foreground: 222.2 47.4% 11.2%;
+    /* Accent - Light Hover States */
+    --accent: 220 14% 96%;
+    --accent-foreground: 213 14% 20%;
 
-    --destructive: 0 84.2% 60.2%;
-    --destructive-foreground: 210 40% 98%;
+    /* Status Colors */
+    --destructive: 0 72% 51%;
+    --destructive-foreground: 0 0% 100%;
 
-    --border: 214.3 31.8% 91.4%;
-    --input: 214.3 31.8% 91.4%;
-    --ring: 222.2 84% 4.9%;
+    --success: 142 71% 45%;
+    --success-foreground: 0 0% 100%;
 
-    --radius: 0.5rem;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
 
-    --sidebar-background: 0 0% 98%;
+    --info: 217 91% 60%;
+    --info-foreground: 0 0% 100%;
 
-    --sidebar-foreground: 240 5.3% 26.1%;
+    /* Structure */
+    --border: 220 13% 91%;
+    --input: 220 13% 91%;
+    --ring: 217 91% 60%;
 
-    --sidebar-primary: 240 5.9% 10%;
+    --radius: 0.375rem;
 
-    --sidebar-primary-foreground: 0 0% 98%;
-
-    --sidebar-accent: 240 4.8% 95.9%;
-
-    --sidebar-accent-foreground: 240 5.9% 10%;
-
-    --sidebar-border: 220 13% 91%;
-
-    --sidebar-ring: 217.2 91.2% 59.8%;
-  }
-
-  .dark {
-    --background: 222.2 84% 4.9%;
-    --foreground: 210 40% 98%;
-
-    --card: 222.2 84% 4.9%;
-    --card-foreground: 210 40% 98%;
-
-    --popover: 222.2 84% 4.9%;
-    --popover-foreground: 210 40% 98%;
-
-    --primary: 210 40% 98%;
-    --primary-foreground: 222.2 47.4% 11.2%;
-
-    --secondary: 217.2 32.6% 17.5%;
-    --secondary-foreground: 210 40% 98%;
-
-    --muted: 217.2 32.6% 17.5%;
-    --muted-foreground: 215 20.2% 65.1%;
-
-    --accent: 217.2 32.6% 17.5%;
-    --accent-foreground: 210 40% 98%;
-
-    --destructive: 0 62.8% 30.6%;
-    --destructive-foreground: 210 40% 98%;
-
-    --border: 217.2 32.6% 17.5%;
-    --input: 217.2 32.6% 17.5%;
-    --ring: 212.7 26.8% 83.9%;
-    --sidebar-background: 240 5.9% 10%;
-    --sidebar-foreground: 240 4.8% 95.9%;
-    --sidebar-primary: 224.3 76.3% 48%;
+    /* Sidebar - Clean Navigation */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 213 14% 20%;
+    --sidebar-primary: 217 91% 60%;
     --sidebar-primary-foreground: 0 0% 100%;
-    --sidebar-accent: 240 3.7% 15.9%;
-    --sidebar-accent-foreground: 240 4.8% 95.9%;
-    --sidebar-border: 240 3.7% 15.9%;
-    --sidebar-ring: 217.2 91.2% 59.8%;
+    --sidebar-accent: 220 14% 96%;
+    --sidebar-accent-foreground: 213 14% 20%;
+    --sidebar-border: 220 13% 91%;
+    --sidebar-ring: 217 91% 60%;
+
+    /* Custom Tokens for DCC */
+    --surface-elevated: 0 0% 100%;
+    --surface-subtle: 220 14% 98%;
+    --text-primary: 213 14% 20%;
+    --text-secondary: 215 14% 46%;
+    --text-tertiary: 215 14% 64%;
+    --divider: 220 13% 91%;
+    --divider-strong: 220 13% 85%;
+
+    /* Coming Soon State */
+    --coming-soon-bg: 220 14% 98%;
+    --coming-soon-border: 220 13% 85%;
+    --coming-soon-text: 215 14% 46%;
+
+    /* Elevation Shadows */
+    --shadow-sm: 0 1px 2px 0 hsl(0 0% 0% / 0.05);
+    --shadow-md: 0 4px 6px -1px hsl(0 0% 0% / 0.1), 0 2px 4px -2px hsl(0 0% 0% / 0.1);
+    --shadow-lg: 0 10px 15px -3px hsl(0 0% 0% / 0.1), 0 4px 6px -4px hsl(0 0% 0% / 0.1);
   }
 }
 
@@ -100,6 +91,189 @@ All colors MUST be HSL.
   }
 
   body {
-    @apply bg-background text-foreground;
+    @apply bg-background text-foreground antialiased;
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+    font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  }
+
+  /* Typography Scale */
+  h1 {
+    @apply text-2xl font-medium tracking-tight text-foreground;
+  }
+
+  h2 {
+    @apply text-xl font-medium tracking-tight text-foreground;
+  }
+
+  h3 {
+    @apply text-lg font-medium text-foreground;
+  }
+
+  h4 {
+    @apply text-base font-medium text-foreground;
+  }
+
+  p {
+    @apply text-sm leading-relaxed;
+  }
+}
+
+/* Custom Scrollbar - Subtle */
+@layer utilities {
+  .scrollbar-thin {
+    scrollbar-width: thin;
+    scrollbar-color: hsl(var(--muted)) transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar {
+    width: 6px;
+    height: 6px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-track {
+    background: transparent;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb {
+    background-color: hsl(var(--muted));
+    border-radius: 3px;
+  }
+
+  .scrollbar-thin::-webkit-scrollbar-thumb:hover {
+    background-color: hsl(var(--muted-foreground));
+  }
+}
+
+/* Animation Classes */
+@layer utilities {
+  .animate-fade-in {
+    animation: fadeIn 0.2s ease-out;
+  }
+
+  .animate-slide-up {
+    animation: slideUp 0.2s ease-out;
+  }
+
+  @keyframes fadeIn {
+    from {
+      opacity: 0;
+    }
+    to {
+      opacity: 1;
+    }
+  }
+
+  @keyframes slideUp {
+    from {
+      opacity: 0;
+      transform: translateY(8px);
+    }
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+}
+
+/* Card Elevation Styles */
+@layer components {
+  .card-elevated {
+    @apply bg-card border border-border rounded-lg;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .card-elevated:hover {
+    box-shadow: var(--shadow-md);
+  }
+
+  .card-flat {
+    @apply bg-card border border-border rounded-lg;
+  }
+
+  .stat-card {
+    @apply bg-card border border-border rounded-lg p-4;
+    box-shadow: var(--shadow-sm);
+  }
+
+  .coming-soon-overlay {
+    @apply relative overflow-hidden;
+  }
+
+  .coming-soon-overlay::after {
+    content: '';
+    @apply absolute inset-0 bg-background/60 backdrop-blur-[1px];
+  }
+}
+
+/* Navigation Active States */
+@layer components {
+  .nav-item {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium transition-colors;
+    @apply text-muted-foreground hover:text-foreground hover:bg-accent;
+  }
+
+  .nav-item-active {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium;
+    @apply text-primary bg-primary/5;
+  }
+
+  .nav-item-disabled {
+    @apply flex items-center gap-3 px-3 py-2 rounded-md text-sm font-medium;
+    @apply text-muted-foreground/50 cursor-not-allowed;
+  }
+}
+
+/* Tab Styles - Google Console Inspired */
+@layer components {
+  .tab-list {
+    @apply flex gap-1 border-b border-border;
+  }
+
+  .tab-trigger {
+    @apply px-4 py-2.5 text-sm font-medium text-muted-foreground;
+    @apply border-b-2 border-transparent -mb-px transition-colors;
+    @apply hover:text-foreground;
+  }
+
+  .tab-trigger-active {
+    @apply px-4 py-2.5 text-sm font-medium text-primary;
+    @apply border-b-2 border-primary -mb-px;
+  }
+}
+
+/* Badge Styles */
+@layer components {
+  .badge-default {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+    @apply bg-secondary text-secondary-foreground;
+  }
+
+  .badge-primary {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+    @apply bg-primary/10 text-primary;
+  }
+
+  .badge-coming-soon {
+    @apply inline-flex items-center px-2 py-0.5 rounded text-xs font-medium;
+    @apply bg-warning/10 text-warning border border-warning/20;
+  }
+}
+
+/* Data Grid Styles */
+@layer components {
+  .data-grid {
+    @apply grid gap-4;
+  }
+
+  .data-cell {
+    @apply p-4 border-b border-border last:border-0;
+  }
+
+  .data-label {
+    @apply text-xs font-medium text-muted-foreground uppercase tracking-wide mb-1;
+  }
+
+  .data-value {
+    @apply text-sm font-medium text-foreground;
   }
 }
