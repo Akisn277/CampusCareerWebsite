@@ -8,12 +8,7 @@ import {
   SelectValue,
 } from '@/components/ui/select';
 import { CompanyFilters as Filters } from '@/types/company';
-import {
-  getUniqueCompanyTypes,
-  getUniqueCategories,
-  getUniqueEmployeeSizes,
-  getUniqueCountries,
-} from '@/data/mockCompanies';
+import { useCompanyFilterOptions } from '@/hooks/useCompanies';
 
 interface CompanyFiltersProps {
   filters: Filters;
@@ -21,10 +16,12 @@ interface CompanyFiltersProps {
 }
 
 export function CompanyFilters({ filters, onFilterChange }: CompanyFiltersProps) {
-  const companyTypes = getUniqueCompanyTypes();
-  const categories = getUniqueCategories();
-  const employeeSizes = getUniqueEmployeeSizes();
-  const countries = getUniqueCountries();
+  const { data: options } = useCompanyFilterOptions();
+
+  const companyTypes = options?.companyTypes || [];
+  const categories = options?.categories || [];
+  const employeeSizes = options?.employeeSizes || [];
+  const countries = options?.countries || [];
 
   const hasActiveFilters = Object.values(filters).some(v => v);
 

@@ -3,23 +3,54 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { StatCard } from '@/components/common/StatCard';
 import { ComingSoonCard } from '@/components/common/ComingSoonCard';
 import { CompanyCard } from '@/components/companies/CompanyCard';
-import { mockCompanies, getUniqueCompanyTypes, getUniqueCategories } from '@/data/mockCompanies';
+import { SupabaseConnectionTest } from '@/components/SupabaseConnectionTest';
+import { useCompanyStats, useCompanies } from '@/hooks/useCompanies';
 
 export default function Dashboard() {
-  const companyTypes = getUniqueCompanyTypes();
-  const categories = getUniqueCategories();
-  const recentCompanies = mockCompanies.slice(0, 4);
+  const { data: stats, isLoading: statsLoading, error: statsError } = useCompanyStats();
+  const { data: companies = [], isLoading: companiesLoading, error: companiesError } = useCompanies();
 
-  // Calculate type distribution
-  const typeDistribution = companyTypes.map(type => ({
+  const recentCompanies = companies.slice(0, 4);
+
+  if (statsLoading || companiesLoading) {
+    return (
+      <AppLayout>
+        <div className="p-6 space-y-8 max-w-7xl mx-auto">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-muted rounded w-48"></div>
+            <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              {[...Array(4)].map((_, i) => (
+                <div key={i} className="h-24 bg-muted rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (statsError || companiesError) {
+    return (
+      <AppLayout>
+        <div className="p-6 space-y-8 max-w-7xl mx-auto">
+          <div className="bg-red-50 border border-red-200 rounded p-4">
+            <h3 className="font-semibold text-red-800">Error Loading Data</h3>
+            {statsError && <p className="text-red-600">Stats Error: {statsError.message}</p>}
+            {companiesError && <p className="text-red-600">Companies Error: {companiesError.message}</p>}
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  const typeDistribution = Object.entries(stats?.typeDistribution || {}).map(([type, count]) => ({
     type,
-    count: mockCompanies.filter(c => c.company_type === type).length,
+    count: count as number,
   }));
 
-  // Calculate category distribution
-  const categoryDistribution = categories.map(category => ({
+  const categoryDistribution = Object.entries(stats?.categoryDistribution || {}).map(([category, count]) => ({
     category,
-    count: mockCompanies.filter(c => c.category === category).length,
+    count: count as number,
   }));
 
   return (
@@ -33,31 +64,43 @@ export default function Dashboard() {
           </p>
         </div>
 
+        {/* Supabase Connection Test */}
+        <SupabaseConnectionTest />
+
+        {/* Debug Info */}
+        <div className="bg-gray-50 border border-gray-200 rounded p-4">
+          <h3 className="font-semibold text-gray-800">Debug Information</h3>
+          <p className="text-sm text-gray-600">Total Companies: {stats?.totalCompanies || 0}</p>
+          <p className="text-sm text-gray-600">Companies Array Length: {companies.length}</p>
+          <p className="text-sm text-gray-600">Type Distribution: {Object.keys(stats?.typeDistribution || {}).length} types</p>
+          <p className="text-sm text-gray-600">Category Distribution: {Object.keys(stats?.categoryDistribution || {}).length} categories</p>
+        </div>
+
         {/* Stats Grid */}
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
           <StatCard
             label="Total Companies"
-            value={mockCompanies.length}
+            value={stats?.totalCompanies || 0}
             icon={<Building2 className="w-5 h-5" />}
             sublabel="In database"
           />
           <StatCard
             label="Company Types"
-            value={companyTypes.length}
+            value={typeDistribution.length}
             icon={<Layers className="w-5 h-5" />}
             sublabel="Categories tracked"
           />
           <StatCard
             label="Categories"
-            value={categories.length}
+            value={categoryDistribution.length}
             icon={<Globe className="w-5 h-5" />}
             sublabel="Industry sectors"
           />
           <StatCard
             label="Last Updated"
-            value="Today"
+            value="Live"
             icon={<Clock className="w-5 h-5" />}
-            sublabel="Data refresh"
+            sublabel="Real-time data"
           />
         </div>
 
@@ -72,9 +115,9 @@ export default function Dashboard() {
                   <span className="text-sm text-foreground">{type}</span>
                   <div className="flex items-center gap-3">
                     <div className="w-32 h-2 bg-secondary rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-primary rounded-full"
-                        style={{ width: `${(count / mockCompanies.length) * 100}%` }}
+                        style={{ width: `${(count / (stats?.totalCompanies || 1)) * 100}%` }}
                       />
                     </div>
                     <span className="text-sm font-medium text-foreground w-8 text-right">{count}</span>
@@ -93,9 +136,9 @@ export default function Dashboard() {
                   <span className="text-sm text-foreground truncate max-w-[150px]">{category}</span>
                   <div className="flex items-center gap-3">
                     <div className="w-32 h-2 bg-secondary rounded-full overflow-hidden">
-                      <div 
+                      <div
                         className="h-full bg-primary rounded-full"
-                        style={{ width: `${(count / mockCompanies.length) * 100}%` }}
+                        style={{ width: `${(count / (stats?.totalCompanies || 1)) * 100}%` }}
                       />
                     </div>
                     <span className="text-sm font-medium text-foreground w-8 text-right">{count}</span>
@@ -111,7 +154,7 @@ export default function Dashboard() {
           <h3 className="font-medium mb-4">Recently Added Companies</h3>
           <div className="grid sm:grid-cols-2 gap-4">
             {recentCompanies.map((company) => (
-              <CompanyCard key={company.id} company={company} />
+              <CompanyCard key={company.company_id} company={company} />
             ))}
           </div>
         </div>

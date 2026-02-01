@@ -4,18 +4,29 @@ import { Button } from '@/components/ui/button';
 import { AppLayout } from '@/components/layout/AppLayout';
 import { CompanyDetailTabs } from '@/components/companies/CompanyDetailTabs';
 import { EmptyState } from '@/components/common/EmptyState';
-import { mockCompanies, mockCompanyDetails } from '@/data/mockCompanies';
+import { useCompanyDetail } from '@/hooks/useCompanies';
 
 export default function CompanyDetail() {
   const { companyId } = useParams<{ companyId: string }>();
-  
-  // Find the company
-  const baseCompany = mockCompanies.find(c => c.company_id === companyId);
-  const detailedCompany = companyId ? mockCompanyDetails[companyId] : undefined;
-  
-  const company = detailedCompany || baseCompany;
+  const companyIdNum = companyId ? parseInt(companyId, 10) : null;
 
-  if (!company) {
+  const { data: company, isLoading, error } = useCompanyDetail(companyIdNum!);
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="p-6 max-w-7xl mx-auto">
+          <div className="animate-pulse space-y-6">
+            <div className="h-10 bg-muted rounded w-32"></div>
+            <div className="h-32 bg-muted rounded"></div>
+            <div className="h-96 bg-muted rounded"></div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (error || !company) {
     return (
       <AppLayout>
         <div className="p-6">
@@ -85,17 +96,17 @@ export default function CompanyDetail() {
                     <span>{company.employee_size} employees</span>
                   </div>
                 )}
-                {company.operating_countries && company.operating_countries.length > 0 && (
+                {company.operating_countries && (
                   <div className="flex items-center gap-1.5">
                     <Globe className="w-4 h-4" />
-                    <span>{company.operating_countries.length} countries</span>
+                    <span>{company.operating_countries}</span>
                   </div>
                 )}
               </div>
 
-              {company.website && (
+              {company.website_url && (
                 <a
-                  href={company.website}
+                  href={company.website_url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="inline-flex items-center gap-1.5 text-sm text-primary hover:underline mt-3"
@@ -109,16 +120,7 @@ export default function CompanyDetail() {
         </div>
 
         {/* Tabs Content */}
-        {detailedCompany ? (
-          <CompanyDetailTabs company={detailedCompany} />
-        ) : (
-          <div className="card-flat p-6">
-            <EmptyState
-              title="Limited Data Available"
-              description="Extended company information is not available in the database. Only basic overview is shown."
-            />
-          </div>
-        )}
+        <CompanyDetailTabs company={company} />
       </div>
     </AppLayout>
   );

@@ -5,50 +5,63 @@ import { AppLayout } from '@/components/layout/AppLayout';
 import { CompanyCard } from '@/components/companies/CompanyCard';
 import { CompanyFilters } from '@/components/companies/CompanyFilters';
 import { EmptyState } from '@/components/common/EmptyState';
-import { mockCompanies } from '@/data/mockCompanies';
+import { useCompanies } from '@/hooks/useCompanies';
 import { CompanyFilters as Filters } from '@/types/company';
 
 export default function Companies() {
   const [searchQuery, setSearchQuery] = useState('');
   const [filters, setFilters] = useState<Filters>({});
 
+  const { data: companies = [], isLoading, error } = useCompanies(filters);
+
   const filteredCompanies = useMemo(() => {
-    return mockCompanies.filter((company) => {
+    if (!companies) return [];
+    return companies.filter((company) => {
       // Search filter
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        const matchesSearch = 
-          company.name.toLowerCase().includes(query) ||
-          company.category.toLowerCase().includes(query) ||
-          company.company_type.toLowerCase().includes(query);
+        const matchesSearch =
+          company.name?.toLowerCase().includes(query) ||
+          company.category?.toLowerCase().includes(query) ||
+          company.company_type?.toLowerCase().includes(query);
         if (!matchesSearch) return false;
-      }
-
-      // Type filter
-      if (filters.company_type && company.company_type !== filters.company_type) {
-        return false;
-      }
-
-      // Category filter
-      if (filters.category && company.category !== filters.category) {
-        return false;
-      }
-
-      // Size filter
-      if (filters.employee_size && company.employee_size !== filters.employee_size) {
-        return false;
-      }
-
-      // Country filter
-      if (filters.operating_countries) {
-        if (!company.operating_countries?.includes(filters.operating_countries)) {
-          return false;
-        }
       }
 
       return true;
     });
-  }, [searchQuery, filters]);
+  }, [companies, searchQuery]);
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="p-6 space-y-6 max-w-7xl mx-auto">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-muted rounded w-48"></div>
+            <div className="h-10 bg-muted rounded w-96"></div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
+              {[...Array(6)].map((_, i) => (
+                <div key={i} className="h-48 bg-muted rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
+
+  if (error) {
+    return (
+      <AppLayout>
+        <div className="p-6 space-y-6 max-w-7xl mx-auto">
+          <EmptyState
+            icon={<Building2 className="w-6 h-6 text-muted-foreground" />}
+            title="Error loading companies"
+            description="There was an error loading the companies. Please try again."
+          />
+        </div>
+      </AppLayout>
+    );
+  }
 
   return (
     <AppLayout>
@@ -80,7 +93,7 @@ export default function Companies() {
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
             Showing <span className="font-medium text-foreground">{filteredCompanies.length}</span> of{' '}
-            <span className="font-medium text-foreground">{mockCompanies.length}</span> companies
+            <span className="font-medium text-foreground">{companies.length}</span> companies
           </p>
         </div>
 
@@ -88,7 +101,7 @@ export default function Companies() {
         {filteredCompanies.length > 0 ? (
           <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4">
             {filteredCompanies.map((company) => (
-              <CompanyCard key={company.id} company={company} />
+              <CompanyCard key={company.company_id} company={company} />
             ))}
           </div>
         ) : (

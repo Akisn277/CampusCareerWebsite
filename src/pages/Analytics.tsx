@@ -1,6 +1,6 @@
 import { AppLayout } from '@/components/layout/AppLayout';
 import { ComingSoonCard } from '@/components/common/ComingSoonCard';
-import { mockCompanies, getUniqueCompanyTypes, getUniqueCategories } from '@/data/mockCompanies';
+import { useCompanyStats } from '@/hooks/useCompanies';
 import {
   BarChart,
   Bar,
@@ -15,26 +15,41 @@ import {
 } from 'recharts';
 
 export default function Analytics() {
-  const companyTypes = getUniqueCompanyTypes();
-  const categories = getUniqueCategories();
+  const { data: stats, isLoading } = useCompanyStats();
+
+  if (isLoading) {
+    return (
+      <AppLayout>
+        <div className="p-6 space-y-8 max-w-7xl mx-auto">
+          <div className="animate-pulse space-y-4">
+            <div className="h-8 bg-muted rounded w-48"></div>
+            <div className="grid lg:grid-cols-2 gap-6">
+              {[...Array(3)].map((_, i) => (
+                <div key={i} className="h-80 bg-muted rounded"></div>
+              ))}
+            </div>
+          </div>
+        </div>
+      </AppLayout>
+    );
+  }
 
   // Company type distribution
-  const typeData = companyTypes.map(type => ({
-    name: type,
-    value: mockCompanies.filter(c => c.company_type === type).length,
+  const typeData = Object.entries(stats?.typeDistribution || {}).map(([name, value]) => ({
+    name,
+    value: value as number,
   }));
 
   // Category distribution
-  const categoryData = categories.map(category => ({
-    name: category,
-    value: mockCompanies.filter(c => c.category === category).length,
+  const categoryData = Object.entries(stats?.categoryDistribution || {}).map(([name, value]) => ({
+    name,
+    value: value as number,
   }));
 
   // Employee size distribution
-  const sizeGroups = ['51-200', '201-500', '501-1000', '1001-5000'];
-  const sizeData = sizeGroups.map(size => ({
-    name: size,
-    value: mockCompanies.filter(c => c.employee_size === size).length,
+  const sizeData = Object.entries(stats?.sizeDistribution || {}).map(([name, value]) => ({
+    name,
+    value: value as number,
   }));
 
   // Colors for charts - using semantic tokens
